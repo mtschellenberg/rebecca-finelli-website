@@ -3,7 +3,7 @@ jQuery.post("./Portfolio/getPortfolio", function(data) {
     var table = "<div class=\"row\">\n";
     var modal = "";
     $.each(portfolio.small, function(index, small) {
-        if(index != 0 && index % 6 == 0) {
+        if(index != 0 && index % 5 == 0) {
             table += createRow();
         }
         table += createTableEntry(index + 1, small);
@@ -14,8 +14,6 @@ jQuery.post("./Portfolio/getPortfolio", function(data) {
         modal += createModalEntry(index + 1, large, title);
     })
     table += "</div>\n";
-    console.log(table);
-    console.log(modal);
     $("#table").html(table);
     $("#modal").html(modal);
 });

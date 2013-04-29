@@ -18,25 +18,22 @@
 
 <body>
 
-<center>
-    <div id="nav">
-        <img id="nav-img" src="images/RebeccaFinelliNav.png" usemap="#nav-map">
-        <map id="nav-map" name="nav-map">
-            <area shape="rect" coords="0,0,982,222" href="./">
-            <area shape="rect" coords="1775,100,2105,135" href="./Portfolio">
-            <area shape="rect" coords="2190,100,2370,135" href="./About">
-            <area shape="rect" coords="2460,100,2715,135" href="./Contact">
-        </map>
+<div class="container container-menu">
+    <div class="menu-background">
+        <a href="./">
+            <img class="menu-logo" src="images/RebeccaFinelliLogo.png">
+        </a>
+        <ul class="nav nav-pills pull-right">
+            <li><a href="./Portfolio"><h3 class="menu-header">Portfolio</h3></a></li>
+            <li class="active"><a href="./About"><h3 class="menu-header">About</h3></a></li>
+            <li><a href="./Contact"><h3 class="menu-header">Contact</h3></a></li>
+        </ul>
     </div>
-</center>
+</div>
 
-<div class="container">
+<div class="container container-boxed">
 
 <center>
-
-<div class="padded">
-    <img class="img-header" src="images/about.png">
-</div>
 
 <div id="aboutDiv" class="padded">
     ${aboutText}
@@ -45,8 +42,6 @@
 </center>
 
 </div> <!-- container -->
-
-<script src="js/image-map-script.js"></script>
 
 </body>
 </html>

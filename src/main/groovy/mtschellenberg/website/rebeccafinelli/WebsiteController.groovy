@@ -24,7 +24,7 @@ class WebsiteController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     String getHomePage(Model model) {
 
-        model.addAttribute("homeArt", "http://placehold.it/800x600");
+        model.addAttribute("homeArt", "http://placehold.it/1000x800");
 
         // The name of the JSP.
         return "Home";
