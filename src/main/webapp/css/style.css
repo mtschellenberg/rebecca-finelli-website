@@ -1,5 +1,5 @@
 body {
-    min-width: 1000px;
+    min-width: 900px;
 }
 
 .container {
@@ -7,22 +7,21 @@ body {
 }
 
 .container-menu {
-    padding: 30px 0px;
-    height: 100px;
+    padding: 30px 0px 10px;
 }
 
 .menu-background {
     background-image: url(../images/RebeccaFinelliSpan.png);
-    background-size: 80px 80px;
+    background-size: 70px 70px;
 }
 
 .menu-logo {
-    height: 80px;
+    height: 70px;
 }
 
 .menu-header {
     position: relative;
-    top: -5px;
+    top: 20px;
 }
 
 a {
@@ -50,9 +49,9 @@ a {
     -webkit-border-radius: 5px;
        -moz-border-radius: 5px;
             border-radius: 5px;
-    -webkit-box-shadow: 0px 0px 40px #777777;
-       -moz-box-shadow: 0px 0px 40px #777777;
-            box-shadow: 0px 0px 40px #777777;
+    -webkit-box-shadow: 0px 0px 10px #777777;
+       -moz-box-shadow: 0px 0px 10px #777777;
+            box-shadow: 0px 0px 10px #777777;
 }
 
 .padded {
@@ -62,3 +61,30 @@ a {
 .modal-backdrop {
     background-color: white;
 }
+
+.modal-body {
+    max-height: 600px;
+}
+
+.modal-footer {
+    text-align: center;
+    background-color: #ffffff;
+}
+
+.modal.fade {
+    top: 10px;
+    -webkit-transition: opacity 0.3s linear;
+       -moz-transition: opacity 0.3s linear;
+         -o-transition: opacity 0.3s linear;
+            transition: opacity 0.3s linear;
+}
+
+.modal.fade.in {
+    top: 10px;
+}
+
+.modal-custom {
+    width: 700px;
+    margin-left: -350px;
+}
+

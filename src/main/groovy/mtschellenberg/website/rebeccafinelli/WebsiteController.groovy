@@ -54,8 +54,10 @@ class WebsiteController {
     @ResponseBody
     String getPortfolio() {
 
-        String[] largePictures = new String[12];
         String[] smallPictures = new String[12];
+        String[] largePictures = new String[12];
+        String[] titles = new String[12];
+        String[] captions = new String[12];
 
         smallPictures[0] = "http://placehold.it/200x200";
         smallPictures[1] = "http://placehold.it/300x300";
@@ -83,9 +85,37 @@ class WebsiteController {
         largePictures[10] = "http://placehold.it/100x200";
         largePictures[11] = "http://placehold.it/200x100";
 
+        titles[0] = "Image 1";
+        titles[1] = "Image 2";
+        titles[2] = "Image 3";
+        titles[3] = "Image 4";
+        titles[4] = "Image 5";
+        titles[5] = "Image 6";
+        titles[6] = "Image 7";
+        titles[7] = "Image 8";
+        titles[8] = "Image 9";
+        titles[9] = "Image 10";
+        titles[10] = "Image 11";
+        titles[11] = "Image 12";
+
+        captions[0] = "This is the caption for Image 1.";
+        captions[1] = "This is the caption for Image 2.";
+        captions[2] = "This is the caption for Image 3.";
+        captions[3] = "This is the caption for Image 4.";
+        captions[4] = "This is the caption for Image 5.";
+        captions[5] = "This is the caption for Image 6.";
+        captions[6] = "This is the caption for Image 7.";
+        captions[7] = "This is the caption for Image 8.";
+        captions[8] = "This is the caption for Image 9.";
+        captions[9] = "This is the caption for Image 10.";
+        captions[10] = "This is the caption for Image 11.";
+        captions[11] = "This is the caption for Image 12.";
+
         JSONObject jsonObject = new JSONObject("{}");
-        jsonObject.put("large", largePictures);
         jsonObject.put("small", smallPictures);
+        jsonObject.put("large", largePictures);
+        jsonObject.put("title", titles);
+        jsonObject.put("caption", captions);
 
         return jsonObject.toString();
     }

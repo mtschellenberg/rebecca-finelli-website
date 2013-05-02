@@ -24,16 +24,19 @@
             <img class="menu-logo" src="images/RebeccaFinelliLogo.png">
         </a>
         <ul class="nav nav-pills pull-right">
-            <li><a href="./Portfolio"><h3 class="menu-header">Portfolio</h3></a></li>
-            <li><a href="./About"><h3 class="menu-header">About</h3></a></li>
-            <li><a href="./Contact"><h3 class="menu-header">Contact</h3></a></li>
+            <li><a href="./Portfolio"><div class="menu-header">Portfolio</div></a></li>
+            <li><a href="./About"><div class="menu-header">About</div></a></li>
+            <li><a href="./Contact"><div class="menu-header">Contact</div></a></li>
         </ul>
     </div>
 </div>
 
-<div class="container">
+<div class="container" style="padding-top: 10px;">
     <img src="${homeArt}">
 </div>
+
+<script>
+</script>
 
 </body>
 </html>
