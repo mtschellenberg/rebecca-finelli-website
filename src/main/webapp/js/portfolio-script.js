@@ -1,24 +1,32 @@
 var modalIds = new Array();
 
 jQuery.post("./Portfolio/getPortfolio", function(data) {
+
     var portfolio = jQuery.parseJSON(data);
     var table = "<div class=\"row\">\n";
     var modal = "";
+    var rows = 1;
+
     $.each(portfolio.small, function(index, small) {
         if(index != 0 && index % 5 == 0) {
             table += createRow();
+            ++rows;
         }
         table += createTableEntry(index + 1, small);
     })
+
+    table += "</div>\n";
+
     $.each(portfolio.large, function(index, large) {
         modal += createModalEntry(index + 1, large, portfolio.title[index],
                 portfolio.caption[index]);
         modalIds[index] = createModalId(index + 1);
     })
-    table += "</div>\n";
+
     $("#table").html(table);
     $("#modal").html(modal);
-    resizeModals($(window).height());
+
+    centerModals($("body").height(), $(window).height());
 });
 
 function createRow() {
@@ -30,7 +38,7 @@ function createTableEntry(index, image) {
 }
 
 function createImage(image) {
-    return "<img src=\"" + image + "\">\n";
+    return "<img src=\"" + image + "\" onload=\"centerModalsOnLoad();\">\n";
 }
 
 function createModalEntry(index, image, title, caption) {
@@ -49,14 +57,19 @@ function createModalCaption(caption) {
     return "<div class=\"modal-footer\">\n" + caption + "\n</div>\n";
 }
 
-function resizeModals(windowHeight) {
+function centerModalsOnLoad() {
+    centerModals($("body").height(), $(window).height());
+}
+
+function centerModals(bodyHeight, windowHeight) {
+    var chosenHeight = Math.min(bodyHeight, windowHeight);
+    var padding = 10;
     $.each(modalIds, function(index, id) {
-        var position = Math.max(10, (windowHeight - $("#" + id).height()) / 2);
-        $("#" + id).css("top", position + "px");
+        var top = Math.max(padding, (chosenHeight - $("#" + id).height()) / 2);
+        $("#" + id).css("top", top + "px");
     });
 }
 
 $(window).resize(function() {
-    resizeModals($(window).height());
+    centerModals($("body").height(), $(window).height());
 });
-

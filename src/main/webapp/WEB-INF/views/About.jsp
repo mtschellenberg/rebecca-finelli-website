@@ -25,7 +25,7 @@
         </a>
         <ul class="nav nav-pills pull-right">
             <li><a href="./Portfolio"><div class="menu-header">Portfolio</div></a></li>
-            <li class="active"><a href="./About"><div class="menu-header">About</div></a></li>
+            <li class="active"><a href="./About"><strong class="menu-header">About</strong></a></li>
             <li><a href="./Contact"><div class="menu-header">Contact</div></a></li>
         </ul>
     </div>

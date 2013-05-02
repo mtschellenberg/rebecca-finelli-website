@@ -24,7 +24,7 @@
             <img class="menu-logo" src="images/RebeccaFinelliLogo.png">
         </a>
         <ul class="nav nav-pills pull-right">
-            <li class="active"><a href="./Portfolio"><div class="menu-header">Portfolio</div></a></li>
+            <li class="active"><a href="./Portfolio"><strong class="menu-header">Portfolio</strong></a></li>
             <li><a href="./About"><div class="menu-header">About</div></a></li>
             <li><a href="./Contact"><div class="menu-header">Contact</div></a></li>
         </ul>

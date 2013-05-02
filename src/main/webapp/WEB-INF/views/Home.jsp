@@ -31,7 +31,7 @@
     </div>
 </div>
 
-<div class="container" style="padding-top: 10px;">
+<div class="container">
     <img src="${homeArt}">
 </div>
 
