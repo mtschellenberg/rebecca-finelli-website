@@ -32,8 +32,14 @@
 </div>
 
 <div class="container">
-    <img src="${homeArt}">
-</div>
+
+<center>
+
+<img src="${homeArt}">
+
+</center>
+
+</div> <!-- container -->
 
 <script>
 </script>

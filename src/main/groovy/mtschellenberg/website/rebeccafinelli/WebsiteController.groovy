@@ -1,7 +1,14 @@
 package mtschellenberg.website.rebeccafinelli
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+
+import javax.servlet.ServletContext;
+
 import org.json.JSONObject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +21,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 class WebsiteController {
 
+    static final String PORTFOLIO_HOME = "../data/RebeccaFinelli/portfolio";
+    static final String THUMBNAIL_HOME =
+            "../data/RebeccaFinelli/portfolio/thumbnails";
+    static final String THUMBNAIL_SUFFIX = "Thumb";
+    static final String TITLE_HOME = "../data/RebeccaFinelli/portfolio/titles";
+    static final String TITLE_SUFFIX = "Title";
+    static final String CAPTION_HOME =
+            "../data/RebeccaFinelli/portfolio/captions";
+    static final String CAPTION_SUFFIX = "Caption";
+    static final String ABOUT_FILE = "../data/RebeccaFinelli/about/about.txt";
+    static final String RESUME_FILE = "../data/RebeccaFinelli/resume.pdf";
+    static final String CONTACT_FILE =
+            "../data/RebeccaFinelli/contact/contact.txt";
+
+    @Autowired
+    ServletContext servletContext;
+
     /**
      * Returns the home page.
      *
@@ -24,10 +48,11 @@ class WebsiteController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     String getHomePage(Model model) {
 
-        model.addAttribute("homeArt", "http://placehold.it/1000x800");
+        // model.addAttribute("homeArt", "http://placehold.it/1000x800");
 
         // The name of the JSP.
-        return "Home";
+        // return "Home";
+        return "Portfolio";
     }
 
     /**
@@ -54,70 +79,311 @@ class WebsiteController {
     @ResponseBody
     String getPortfolio() {
 
-        String[] smallPictures = new String[12];
-        String[] largePictures = new String[12];
-        String[] titles = new String[12];
-        String[] captions = new String[12];
+        String[] pictures = getPortfolioPictures();
+        String[] thumbnails = getPortfolioThumbnails(pictures);
+        String[] titles = getPortfolioTitles(pictures);
+        String[] captions = getPortfolioCaptions(pictures);
 
-        smallPictures[0] = "http://placehold.it/200x200";
-        smallPictures[1] = "http://placehold.it/300x300";
-        smallPictures[2] = "http://placehold.it/400x400";
-        smallPictures[3] = "http://placehold.it/400x400";
-        smallPictures[4] = "http://placehold.it/400x400";
-        smallPictures[5] = "http://placehold.it/400x400";
-        smallPictures[6] = "http://placehold.it/400x400";
-        smallPictures[7] = "http://placehold.it/400x400";
-        smallPictures[8] = "http://placehold.it/400x400";
-        smallPictures[9] = "http://placehold.it/400x400";
-        smallPictures[10] = "http://placehold.it/400x400";
-        smallPictures[11] = "http://placehold.it/400x400";
-
-        largePictures[0] = "http://placehold.it/200x200";
-        largePictures[1] = "http://placehold.it/200x400";
-        largePictures[2] = "http://placehold.it/400x200";
-        largePictures[3] = "http://placehold.it/400x400";
-        largePictures[4] = "http://placehold.it/400x600";
-        largePictures[5] = "http://placehold.it/600x400";
-        largePictures[6] = "http://placehold.it/600x600";
-        largePictures[7] = "http://placehold.it/200x600";
-        largePictures[8] = "http://placehold.it/600x200";
-        largePictures[9] = "http://placehold.it/100x100";
-        largePictures[10] = "http://placehold.it/100x200";
-        largePictures[11] = "http://placehold.it/200x100";
-
-        titles[0] = "Image 1";
-        titles[1] = "Image 2";
-        titles[2] = "Image 3";
-        titles[3] = "Image 4";
-        titles[4] = "Image 5";
-        titles[5] = "Image 6";
-        titles[6] = "Image 7";
-        titles[7] = "Image 8";
-        titles[8] = "Image 9";
-        titles[9] = "Image 10";
-        titles[10] = "Image 11";
-        titles[11] = "Image 12";
-
-        captions[0] = "This is the caption for Image 1.";
-        captions[1] = "This is the caption for Image 2.";
-        captions[2] = "This is the caption for Image 3.";
-        captions[3] = "This is the caption for Image 4.";
-        captions[4] = "This is the caption for Image 5.";
-        captions[5] = "This is the caption for Image 6.";
-        captions[6] = "This is the caption for Image 7.";
-        captions[7] = "This is the caption for Image 8.";
-        captions[8] = "This is the caption for Image 9.";
-        captions[9] = "This is the caption for Image 10.";
-        captions[10] = "This is the caption for Image 11.";
-        captions[11] = "This is the caption for Image 12.";
+        for(int i = 0; i < pictures.length; ++i) {
+            pictures[i] = PORTFOLIO_HOME + "/" + pictures[i];
+        }
 
         JSONObject jsonObject = new JSONObject("{}");
-        jsonObject.put("small", smallPictures);
-        jsonObject.put("large", largePictures);
+        jsonObject.put("large", pictures);
+        jsonObject.put("small", thumbnails);
         jsonObject.put("title", titles);
         jsonObject.put("caption", captions);
 
         return jsonObject.toString();
+    }
+
+    /**
+     * Gets the pictures from the portfolio directory and returns their file
+     * paths relative to the servlet.
+     *
+     * @return
+     */
+    private String[] getPortfolioPictures() {
+
+        File directory = new File(servletContext.getRealPath("/") +
+                PORTFOLIO_HOME);
+
+        if(!directory.exists() || !directory.isDirectory()) {
+            return new String[0];
+        }
+
+        File[] files = directory.listFiles();
+
+        int count = 0;
+        for(File file : files) {
+            if(file.isDirectory()) {
+                ++count;
+            }
+        }
+
+        String[] pictures = new String[files.length - count];
+
+        int i = 0;
+        for(File file : files) {
+            if(!file.isDirectory()) {
+                pictures[i++] = file.name;
+            }
+        }
+
+        return pictures;
+    }
+
+    /**
+     * Gets the thumbnails from the portfolio's thumbnails directory that
+     * correspond with the pictures found on the given file paths and returns
+     * their file paths relative to the servlet.
+     *
+     * @param pictures
+     *
+     * @return
+     */
+    private String[] getPortfolioThumbnails(String[] pictures) {
+
+        File directory = new File(servletContext.getRealPath("/") +
+                THUMBNAIL_HOME);
+
+        if(!directory.exists() || !directory.isDirectory()) {
+
+            String[] thumbnails = new String[pictures.length];
+
+            for(int i = 0; i < pictures.length; ++i) {
+                thumbnails[i] = PORTFOLIO_HOME + "/" + pictures[i];
+            }
+
+            return thumbnails;
+        }
+
+        File[] files = directory.listFiles();
+        String[] thumbnails = new String[files.length];
+
+        for(int i = 0; i < files.length; ++i) {
+            thumbnails[i] = files[i].name;
+        }
+
+        String[] sortedThumbnails = new String[pictures.length];
+
+        for(int i = 0; i < pictures.length; ++i) {
+
+            sortedThumbnails[i] = PORTFOLIO_HOME + "/" + pictures[i];
+
+            for(String thumbnail : thumbnails) {
+
+                String pictureBase = getPictureBase(pictures[i]);
+                String thumbnailBase = getThumbnailBase(thumbnail);
+
+                if(pictureBase.equals(thumbnailBase)) {
+
+                    sortedThumbnails[i] = THUMBNAIL_HOME + "/" + thumbnail;
+                    break;
+                }
+            }
+        }
+
+        return sortedThumbnails;
+    }
+
+    /**
+     * Returns the base for the given picture file without the extension.
+     *
+     * @param name
+     *
+     * @return
+     */
+    private String getPictureBase(String name) {
+
+        return name.substring(0, name.lastIndexOf("."));
+    }
+
+    /**
+     * Returns the base for the given thumbnail file without the suffix or
+     * extension.
+     *
+     * @param name
+     *
+     * @return
+     */
+    private String getThumbnailBase(String name) {
+
+        if(name.lastIndexOf(THUMBNAIL_SUFFIX + ".") < 0) {
+            return "";
+        }
+
+        return name.substring(0, name.lastIndexOf(THUMBNAIL_SUFFIX + "."));
+    }
+
+    /**
+     * Gets the titles from the portfolio's titles directory that correspond
+     * with the pictures found on the given file paths and returns their
+     * content.
+     *
+     * @param pictures
+     *
+     * @return
+     */
+    private String[] getPortfolioTitles(String[] pictures) {
+
+        File directory = new File(servletContext.getRealPath("/") +
+                TITLE_HOME);
+
+        if(!directory.exists() || !directory.isDirectory()) {
+
+            String[] titles = new String[pictures.length];
+
+            for(int i = 1; i <= pictures.length; ++i) {
+                titles[i-1] = "Image " + i;
+            }
+
+            return titles;
+        }
+
+        File[] files = directory.listFiles();
+        String[] titles = new String[pictures.length];
+
+        for(int i = 1; i <= pictures.length; ++i) {
+
+            titles[i-1] = "Image " + i;
+
+            for(File file : files) {
+
+                String pictureBase = getPictureBase(pictures[i-1]);
+                String fileBase = getTitleBase(file.name);
+
+                if(pictureBase.equals(fileBase)) {
+
+                    String title = "";
+                    Scanner scanner = null;
+
+                    try {
+                        scanner = new Scanner(file);
+
+                        while(scanner.hasNextLine()) {
+                            title += "<p>" + scanner.nextLine() + "</p>\n";
+                        }
+                    }
+
+                    catch(IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    finally {
+                        if(scanner != null) {
+                            scanner.close();
+                        }
+                    }
+
+                    titles[i-1] = title;
+                }
+            }
+        }
+
+        return titles;
+    }
+
+    /**
+     * Returns the base for the given title file without the suffix or
+     * extension.
+     *
+     * @param name
+     *
+     * @return
+     */
+    private String getTitleBase(String name) {
+
+        if(name.lastIndexOf(TITLE_SUFFIX + ".txt") < 0) {
+            return "";
+        }
+
+        return name.substring(0, name.lastIndexOf(TITLE_SUFFIX + ".txt"));
+    }
+
+    /**
+     * Gets the captions from the portfolio's captions directory that correspond
+     * with the pictures found on the given file paths and returns their
+     * content.
+     *
+     * @param pictures
+     *
+     * @return
+     */
+    private String[] getPortfolioCaptions(String[] pictures) {
+
+        File directory = new File(servletContext.getRealPath("/") +
+                CAPTION_HOME);
+
+        if(!directory.exists() || !directory.isDirectory()) {
+
+            String[] captions = new String[pictures.length];
+
+            for(int i = 1; i <= pictures.length; ++i) {
+                captions[i-1] = "Caption for Image " + i + ".";
+            }
+
+            return captions;
+        }
+
+        File[] files = directory.listFiles();
+        String[] captions = new String[pictures.length];
+
+        for(int i = 1; i <= pictures.length; ++i) {
+
+            captions[i-1] = "Caption for Image " + i + ".";
+
+            for(File file : files) {
+
+                String pictureBase = getPictureBase(pictures[i-1]);
+                String fileBase = getCaptionBase(file.name);
+
+                if(pictureBase.equals(fileBase)) {
+
+                    String caption = "";
+                    Scanner scanner = null;
+
+                    try {
+                        scanner = new Scanner(file);
+
+                        while(scanner.hasNextLine()) {
+                            caption += "<p>" + scanner.nextLine() + "</p>\n";
+                        }
+                    }
+
+                    catch(IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    finally {
+                        if(scanner != null) {
+                            scanner.close();
+                        }
+                    }
+
+                    captions[i-1] = caption;
+                }
+            }
+        }
+
+        return captions;
+    }
+
+    /**
+     * Returns the base for the given caption file without the suffix or
+     * extension.
+     *
+     * @param name
+     *
+     * @return
+     */
+    private String getCaptionBase(String name) {
+
+        if(name.lastIndexOf(CAPTION_SUFFIX + ".txt") < 0) {
+            return "";
+        }
+
+        return name.substring(0, name.lastIndexOf(CAPTION_SUFFIX + ".txt"));
     }
 
     /**
@@ -130,7 +396,37 @@ class WebsiteController {
     @RequestMapping(value = "/About", method = RequestMethod.GET)
     String getAboutPage(Model model) {
 
-        model.addAttribute("aboutText", "Rebecca Finelli is an intelligent, beautiful, and talented medical illustrator with an awesome website and a wonderful boyfriend.");
+        String text = "Coming soon!";
+
+        File file = new File(servletContext.getRealPath("/") + ABOUT_FILE);
+
+        if(file.exists()) {
+
+            Scanner scanner = null;
+
+            try {
+
+                scanner = new Scanner(file);
+                text = "";
+
+                while(scanner.hasNextLine()) {
+                    text += "<p>" + scanner.nextLine() + "</p>\n";
+                }
+            }
+
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+
+            finally {
+                if(scanner != null) {
+                    scanner.close();
+                }
+            }
+        }
+
+        model.addAttribute("aboutText", text);
+        model.addAttribute("resumeLink", RESUME_FILE);
 
         // The name of the JSP.
         return "About";
@@ -146,7 +442,37 @@ class WebsiteController {
     @RequestMapping(value = "/Contact", method = RequestMethod.GET)
     String getContactPage(Model model) {
 
-        model.addAttribute("contactInfo", "Email:  rebecca at rebeccafinelli dot com");
+        String text = "Coming soon!";
+
+        File file = new File(servletContext.getRealPath("/") + CONTACT_FILE);
+
+        if(file.exists()) {
+
+            Scanner scanner = null;
+
+            try {
+
+                scanner = new Scanner(file);
+                text = "";
+
+                while(scanner.hasNextLine()) {
+                    text += "<p>" + scanner.nextLine() + "</p>\n";
+                }
+            }
+
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+
+            finally {
+                if(scanner != null) {
+                    scanner.close();
+                }
+            }
+        }
+
+        model.addAttribute("contactInfo", text);
+        model.addAttribute("emailAddress", "rebecca@rebeccafinelli.com");
 
         // The name of the JSP.
         return "Contact";

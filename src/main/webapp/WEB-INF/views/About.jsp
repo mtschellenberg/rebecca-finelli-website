@@ -37,6 +37,7 @@
 
 <div id="aboutDiv" class="padded">
     ${aboutText}
+    <p><strong><a href="${resumeLink}">Resume</a></strong></p>
 </div>
 
 </center>

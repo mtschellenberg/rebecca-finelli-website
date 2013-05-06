@@ -37,6 +37,7 @@
 
 <div id="contactDiv" class="padded">
     ${contactInfo}
+    <p><strong><a href="mailto:${emailAddress}">Email:  ${emailAddress}</a></strong></p>
 </div>
 
 </center>

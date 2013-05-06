@@ -14,6 +14,7 @@
     <link href="css/style.css" rel="stylesheet" media="screen">
     <script src="js/jquery-1.9.1.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="js/swfobject.js"></script>
 </head>
 
 <body>
